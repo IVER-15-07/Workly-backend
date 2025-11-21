@@ -1,26 +1,30 @@
 import prisma from "./../../../config/database.js";
 
 export const ChatRepository = {
-  async createConversation(data) {
+  async crearConversacion(data) {
     return prisma.conversacion.create({ data });
   },
-  async getConversationById(id) {
+
+  async getConversacionPorId(id) {
     return prisma.conversacion.findUnique({
       where: { id },
       include: { participantes: true, mensajes: true },
     });
   },
-  async createMessage(data) {
+
+  async crearMensaje(data) {
     return prisma.mensaje.create({ data });
   },
-  async getMessagesByConversation(conversacionId) {
+
+  async getMensajesPorConversacion(conversacionId) {
     return prisma.mensaje.findMany({
       where: { conversacionId },
       orderBy: { creadoEn: "asc" },
     });
   },
 
-  async getOrCreateConversationBetween(userAId, userBId, titulo) {
+
+  async obtenerOCrearConversacionEntre(userAId, userBId, titulo) {
     // buscar conversación existente entre ambos usuarios
     const existing = await prisma.conversacion.findFirst({
       where: {
@@ -51,4 +55,8 @@ export const ChatRepository = {
 
     return newConv;
   },
+
+
+  // crear grupos aaaaah 
+  
 };

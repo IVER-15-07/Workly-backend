@@ -1,27 +1,32 @@
 import { ChatService } from "../services/chat.service.js";
 
-export const ChatController = {
-  async createOrGetConversation(req, res) {
-    try {
-      const { userAId, userBId, titulo } = req.body;
-      if (!userAId || !userBId) return res.status(400).json({ error: "Falta userAId o userBId" });
-      const conv = await ChatService.getOrCreateConversationBetween(userAId, userBId, titulo);
-      res.status(200).json(conv);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  },
-
-  async getMessages(req, res) {
-    try {
-      const { id } = req.params;
-      const messages = await ChatService.getMessages(Number(id));
-      res.json(messages);
-    } catch (err) {
-
-      res.status(500).json({ error: err.message });
-    }
+export async function createOrGetConversation(req, res) {
+  try {
+    const { usuario1id, usuario2id } = req.body;
+    const conversacion = await ChatService.crearORecuperarConversacion(Number(usuario1id), Number(usuario2id));
+    return res.status(200).json({ success: true, data: conversacion });
+  } catch (err) {
+    console.error("Error en crear o recuperar conversación:", err);
+    return res.status(err.status || 500).json({
+      success: false,
+      message: err.message || "Error interno del servidor",
+      data: null
+    });
   }
-
-
 };
+
+export async function getMessages(req, res) {
+  try {
+    const { conversacionid } = req.params;
+    const mensajes = await ChatService.getMensajes(Number(conversacionid));
+    return res.status(200).json({ success: true, data: mensajes });
+  } catch (err) {
+    console.error("Error en recuperar mensajes:", err);
+    return res.status(err.status || 500).json({
+      success: false,
+      message: err.message || "Error interno del servidor",
+      data: null
+    });
+  }
+}
+

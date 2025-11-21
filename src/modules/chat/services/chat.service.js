@@ -1,8 +1,8 @@
 import { ChatRepository } from "../repositories/chat.repository.js";
 
 export const ChatService = {
-  async createConversation(titulo, tipo = "privado", participantes = []) {
-    const conv = await ChatRepository.createConversation({
+  async crearConversacion(titulo, tipo = "privado", participantes = []) {
+    const conv = await ChatRepository.crearConversacion({
       titulo,
       tipo,
       participantes: {
@@ -12,13 +12,13 @@ export const ChatService = {
     return conv;
   },
 
-  async getOrCreateConversationBetween(userAId, userBId, titulo) {
-    return ChatRepository.getOrCreateConversationBetween(userAId, userBId, titulo);
+  async obtenerOCrearConversacionEntre(userAId, userBId, titulo) {
+    return ChatRepository.obtenerOCrearConversacionEntre(userAId, userBId, titulo);
   },
 
-  async createMessage({ contenido, remitenteId, conversacionId }) {
+  async crearMensaje({ contenido, remitenteId, conversacionId }) {
     // valida existencia de conversación / remitente si quieres
-    const msg = await ChatRepository.createMessage({
+    const msg = await ChatRepository.crearMensaje({
       contenido,
       remitenteId,
       conversacionId,
@@ -26,11 +26,11 @@ export const ChatService = {
     return msg;
   },
 
-  async getMessages(conversacionId) {
-    return ChatRepository.getMessagesByConversation(conversacionId);
+  async getMensajes(conversacionId) {
+    return ChatRepository.getMensajesPorConversacion(conversacionId);
   },
 
-  async getConversation(id) {
-    return ChatRepository.getConversationById(id);
+  async getConversacion(id) {
+    return ChatRepository.getConversacionPorId(id);
   },
 };

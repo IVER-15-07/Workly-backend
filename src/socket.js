@@ -1,5 +1,7 @@
 import { Server as SocketServer } from "socket.io";
-import { ChatService } from "./modules/chat/services/chat.service.js";
+import { enviarMensaje } from "./modules/chat/sockets/enviarMensaje.js";
+import { joinConversacion } from "./modules/chat/sockets/joinConversacion.js";
+import { salirConversacion } from "./modules/chat/sockets/joinConversacion.js";
 
 export function initializeSocket(server) {
     const io = new SocketServer(server, {
@@ -9,35 +11,13 @@ export function initializeSocket(server) {
         }
     });
 
-
     io.on("connection", (socket) => {
-        console.log("Cliente conectado:", socket.id);
-
-        // join a room (cliente debe emitir 'joinConversation' con { conversacionId, userId })
-        socket.on("joinConversation", async ({ conversacionId, userId }) => {
-            if (!conversacionId) return;
-            const room = `conv_${conversacionId}`;
-            socket.join(room);
-            console.log(`socket ${socket.id} join ${room}`);
-            // opcional: enviar historial
-            const messages = await ChatService.getMessages(conversacionId);
-            socket.emit("conversationHistory", messages);
-        });
-
-        // enviar mensaje: payload { contenido, remitenteId, conversacionId }
-        socket.on("sendMessage", async (payload) => {
-            try {
-                const saved = await ChatService.createMessage(payload);
-                const room = `conv_${payload.conversacionId}`;
-                // emitir solo a la room
-                io.to(room).emit("receiveMessage", saved);
-            } catch (err) {
-                socket.emit("errorMessage", { error: err.message });
-            }
-        });
-
+        console.log(`[WS] Nuevo cliente conectado: ${socket.id}`);
+        socket.on("enviarMensaje", (payload, ack) => enviarMensaje(socket, payload, ack, io));
+        socket.on("joinConversacion", (data) => joinConversacion(socket, data));
+        socket.on("salirConversacion", (data) => salirConversacion(socket, data));
         socket.on("disconnect", () => {
-            console.log("Cliente desconectado:", socket.id);
+            console.log(`[WS] Cliente desconectado: ${socket.id}`);
         });
     });
 
