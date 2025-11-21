@@ -1,7 +1,7 @@
 import { Server as SocketServer } from "socket.io";
 import { enviarMensaje } from "./modules/chat/sockets/enviarMensaje.js";
 import { joinConversacion } from "./modules/chat/sockets/joinConversacion.js";
-import { salirConversacion } from "./modules/chat/sockets/joinConversacion.js";
+import { salirConversacion } from "./modules/chat/sockets/salirConversacion.js";
 
 export function initializeSocket(server) {
     const io = new SocketServer(server, {

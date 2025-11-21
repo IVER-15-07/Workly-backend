@@ -1,4 +1,4 @@
-import { ChatService } from "../services/chat.service";
+import { ChatService } from "../services/chat.service.js";
 
 const RATE_LIMIT_INTERVAL = 1500;
 const ultimoMensaje = new Map();

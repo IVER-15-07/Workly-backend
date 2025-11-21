@@ -1,6 +1,6 @@
-import { ChatService } from "../services/chat.service";
+import { ChatService } from "../services/chat.service.js";
 
-export async function salirConversacion(socket, { conversacionId, userId }) {
+export async function joinConversacion(socket, { conversacionId, userId }) {
     try {
         if (!conversacionId || !userId) {
             return socket.emit("errorMessage", {
