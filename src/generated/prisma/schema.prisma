@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id              Int      @id @default(autoincrement())
+  nombre          String
+  email           String   @unique
+  contrasena      String?
+  propfilePicture String?
+  creadoEn        DateTime @default(now())
+  actualizadoEn   DateTime @updatedAt
+
+  mensajes        Mensaje[]
+  participaciones ConversacionParticipante[]
+}
+
+model Conversacion {
+  id            Int      @id @default(autoincrement())
+  titulo        String?
+  tipo          String // "privado" | "grupo"
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+
+  mensajes      Mensaje[]
+  participantes ConversacionParticipante[]
+}
+
+model Mensaje {
+  id            Int      @id @default(autoincrement())
+  contenido     String
+  tipo          String   @default("texto") // texto, imagen, audio, etc.
+  visto         Boolean  @default(false)
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+
+  conversacionId Int
+  conversacion   Conversacion @relation(fields: [conversacionId], references: [id])
+
+  remitenteId Int
+  remitente   Usuario @relation(fields: [remitenteId], references: [id])
+}
+
+model ConversacionParticipante {
+  id Int @id @default(autoincrement())
+
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+
+  conversacion   Conversacion @relation(fields: [conversacionId], references: [id])
+  conversacionId Int
+  usuario        Usuario      @relation(fields: [usuarioId], references: [id])
+  usuarioId      Int
+
+  @@unique([conversacionId, usuarioId])
+}
