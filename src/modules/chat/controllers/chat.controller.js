@@ -32,7 +32,7 @@ export async function createOrGetConversation(req, res) {
 
 export async function getMessages(req, res) {
   try {
-    const { conversacionid } = req.params;
+    const conversacionid  = req.params.id;
     const mensajes = await ChatService.getMensajes(Number(conversacionid));
     return res.status(200).json({ success: true, data: mensajes });
   } catch (err) {
