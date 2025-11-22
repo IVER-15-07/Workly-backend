@@ -3,8 +3,9 @@ import { ChatService } from "../services/chat.service.js";
 const RATE_LIMIT_INTERVAL = 1500;
 const ultimoMensaje = new Map();
 
-export async function enviarMensaje(socket, payload) {
+export async function enviarMensaje(socket, payload ,ack, io) {
 
+    
     try {
         const { contenido, remitenteId, conversacionId } = payload || {};
         if (!contenido || !remitenteId || !conversacionId) {

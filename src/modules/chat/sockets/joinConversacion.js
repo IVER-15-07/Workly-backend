@@ -7,6 +7,7 @@ export async function joinConversacion(socket, { conversacionId, userId }) {
                 error: "conversacionId y userId son requeridos"
             });
         }
+        
         const room = `conv_${conversacionId}`;
         socket.join(room);
         console.log(`socket ${socket.id} left ${room}`);

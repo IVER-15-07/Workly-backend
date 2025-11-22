@@ -56,7 +56,7 @@ export const ChatRepository = {
 
 
 
-    async listConversacionesPorUsuario(usuarioId) {
+  async listConversacionesPorUsuario(usuarioId) {
     return prisma.conversacion.findMany({
       where: {
         participantes: {
@@ -108,14 +108,37 @@ export const ChatRepository = {
     });
   },
 
+
   async crearMensaje(data) {
-    return prisma.mensaje.create({ data });
+    return prisma.mensaje.create({
+      data,
+      include: {
+        remitente: {
+          select: {
+            id: true,
+            nombre: true,
+            email: true,
+            propfilePicture: true,
+          },
+        },
+      },
+    });
   },
 
   async getMensajesPorConversacion(conversacionId) {
     return prisma.mensaje.findMany({
       where: { conversacionId },
       orderBy: { creadoEn: "asc" },
+      include: {
+        remitente: {
+          select: {
+            id: true,
+            nombre: true,
+            email: true,
+            propfilePicture: true,
+          },
+        },
+      },
     });
   },
 
