@@ -2,7 +2,7 @@ import { ChatService } from "../services/chat.service.js";
 
 
 
-export async function crearGrupo (req, res) {
+export async function crearGrupo(req, res) {
   try {
     const { titulo, participantes } = req.body;
     const nuevoGrupo = await ChatService.crearConversacionGrupal(titulo, participantes);
@@ -21,7 +21,7 @@ export async function crearGrupo (req, res) {
 
 export async function getMessages(req, res) {
   try {
-    const conversacionid  = req.params.id;
+    const conversacionid = req.params.id;
     const mensajes = await ChatService.getMensajes(Number(conversacionid));
     return res.status(200).json({ success: true, data: mensajes });
   } catch (err) {
@@ -84,9 +84,10 @@ export async function getConversacion(req, res) {
 
 export async function agregarParticipanteAGrupo(req, res) {
   try {
-    const { conversacionId, usuarioId } = req.body;
+    const conversacionId = Number(req.params.conversacionId);
+    const usuarioId = Number(req.params.usuarioId);
     const actualizado = await ChatService.agregarParticipanteAGrupo(Number(conversacionId), Number(usuarioId));
-    return res.status(200).json({ success: true, data: actualizado });
+    return res.status(200).json({ success: true, message: "Participante agregado al grupo", data: actualizado });
   } catch (err) {
     console.error("Error en agregar participante al grupo:", err);
     return res.status(err.status || 500).json({
@@ -99,9 +100,10 @@ export async function agregarParticipanteAGrupo(req, res) {
 
 export async function eliminarParticipanteDeGrupo(req, res) {
   try {
-    const { conversacionId, usuarioId } = req.body;
+    const conversacionId = Number(req.params.conversacionId);
+    const usuarioId = Number(req.params.usuarioId);
     const actualizado = await ChatService.eliminarParticipanteDeGrupo(Number(conversacionId), Number(usuarioId));
-    return res.status(200).json({ success: true, data: actualizado });
+    return res.status(200).json({ success: true, message: "Participante eliminado del grupo", data: actualizado });
   } catch (err) {
     console.error("Error en eliminar participante del grupo:", err);
     return res.status(err.status || 500).json({
@@ -130,7 +132,7 @@ export async function listarParticipantes(req, res) {
 
 export async function getConversacionesUsuario(req, res) {
   try {
-     const usuarioId = req.params.usuarioId || req.query.usuarioId || (req.body && req.body.usuarioId);
+    const usuarioId = req.params.usuarioId || req.query.usuarioId || (req.body && req.body.usuarioId);
     const conversaciones = await ChatService.getListchatprivadosUsuario(Number(usuarioId));
     return res.status(200).json({ success: true, data: conversaciones });
   } catch (err) {
@@ -145,7 +147,7 @@ export async function getConversacionesUsuario(req, res) {
 
 export async function getConversacionesgrupoUsuario(req, res) {
   try {
-     const usuarioId = req.params.usuarioId || req.query.usuarioId || (req.body && req.body.usuarioId);
+    const usuarioId = req.params.usuarioId || req.query.usuarioId || (req.body && req.body.usuarioId);
     const conversaciones = await ChatService.getListchatgrupalesUsuario(Number(usuarioId));
     return res.status(200).json({ success: true, data: conversaciones });
   } catch (err) {

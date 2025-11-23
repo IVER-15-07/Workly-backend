@@ -22,10 +22,9 @@ router.post("/conversacion/grupal", crearGrupo);
 
 router.get("/conversations/:id/messages", getMessages);
 
-router.post("/conversacion/:conversacionId/agregar-participante", agregarParticipanteAGrupo);
-router.post("/conversacion/:conversacionId/eliminar-participante", eliminarParticipanteDeGrupo);
+router.post("/conversacion/:conversacionId/participante/:usuarioId", agregarParticipanteAGrupo);
+router.delete("/conversacion/:conversacionId/participante/:usuarioId", eliminarParticipanteDeGrupo);
 router.get("/conversacion/:conversacionId/participantes", listarParticipantes);
-
 
 
 router.get("/conversaciones/:usuarioId", getConversacion);
