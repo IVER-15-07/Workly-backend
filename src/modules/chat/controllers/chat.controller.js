@@ -1,12 +1,14 @@
 import { ChatService } from "../services/chat.service.js";
 
-export async function crearConversacionGrupal(req, res) {
+
+
+export async function crearGrupo (req, res) {
   try {
-    const { titulo, participantes } = req.body; 
-    const conversacionGrupal = await ChatService.crearConversacionGrupal(titulo, participantes);
-    return res.status(201).json({ success: true, data: conversacionGrupal });
+    const { titulo, participantes } = req.body;
+    const nuevoGrupo = await ChatService.crearConversacionGrupal(titulo, participantes);
+    return res.status(201).json({ success: true, data: nuevoGrupo });
   } catch (err) {
-    console.error("Error en crear conversación grupal:", err);
+    console.error("Error en crear grupo:", err);
     return res.status(err.status || 500).json({
       success: false,
       message: err.message || "Error interno del servidor",
@@ -78,20 +80,7 @@ export async function getConversacion(req, res) {
 }
 
 
-export async function crearGrupo (req, res) {
-  try {
-    const { titulo, participantes } = req.body;
-    const nuevoGrupo = await ChatService.crearConversacionGrupal(titulo, participantes);
-    return res.status(201).json({ success: true, data: nuevoGrupo });
-  } catch (err) {
-    console.error("Error en crear grupo:", err);
-    return res.status(err.status || 500).json({
-      success: false,
-      message: err.message || "Error interno del servidor",
-      data: null
-    });
-  }
-}
+
 
 export async function agregarParticipanteAGrupo(req, res) {
   try {

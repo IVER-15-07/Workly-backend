@@ -30,7 +30,6 @@ export const ChatService = {
       throw new Error("Un grupo necesita al menos 2 participantes.");
     }
 
-    // Convertir los IDs a números explícitamente
     const participantesNumeros = participantes.map(Number);
 
     return ChatRepository.crearConversacion({
@@ -46,6 +45,8 @@ export const ChatService = {
   async getListConversacionesPorUsuario(usuarioId) {
     return ChatRepository.listConversacionesPorUsuario(usuarioId);
   },
+
+  
 
   async crearMensaje({ contenido, remitenteId, conversacionId }) {
     const msg = await ChatRepository.crearMensaje({
