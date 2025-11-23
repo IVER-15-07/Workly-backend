@@ -142,8 +142,40 @@ export const ChatRepository = {
     });
   },
 
- 
 
+  async getListChatPrivado(usuarioId) {
+    return prisma.conversacion.findMany({
+      where: {
+        tipo: "privado",
+            participantes: { some: { usuarioId: Number(usuarioId) } },
+      },
+      include: {
+        participantes: {
+          include: { usuario: true }
+        },
+        mensajes: {
+          orderBy: { creadoEn: "desc" },
+          take: 1
+        }
+      },
+    });
+  }, 
 
-
+  async getListChatGrupal(usuarioId) {
+    return prisma.conversacion.findMany({
+      where: {
+        tipo: "grupal",
+            participantes: { some: { usuarioId: Number(usuarioId) } },
+      },
+      include: {
+        participantes: {
+          include: { usuario: true }
+        },
+        mensajes: {
+          orderBy: { creadoEn: "desc" },
+          take: 1
+        }
+      },
+    });
+  },
 };

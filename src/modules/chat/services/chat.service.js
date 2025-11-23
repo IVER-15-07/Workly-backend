@@ -41,12 +41,12 @@ export const ChatService = {
 
 
 
-  
+
   async getListConversacionesPorUsuario(usuarioId) {
     return ChatRepository.listConversacionesPorUsuario(usuarioId);
   },
 
-  
+
 
   async crearMensaje({ contenido, remitenteId, conversacionId }) {
     const msg = await ChatRepository.crearMensaje({
@@ -83,6 +83,46 @@ export const ChatService = {
 
   async listarParticipantes(conversacionId) {
     return ChatRepository.getParticipantes(conversacionId);
-  },
+  },
+
+
+  async getListchatprivadosUsuario(usuarioId) {
+    if (!usuarioId) {
+      throw new Error("El ID de usuario es obligatorio");
+    }
+    const conversaciones = await ChatRepository.getListChatPrivado(Number(usuarioId));
+
+    return conversaciones.map(c => {
+      const otros = (c.participantes || []).filter(p => Number(p.usuarioId) !== Number(usuarioId));
+      const otro = (otros[0] && otros[0].usuario) ? otros[0].usuario : null;
+      const ultimoMensaje = (c.mensajes && c.mensajes.length > 0) ? c.mensajes[0] : null;
+      return {
+        conversacionId: c.id,
+        titulo: c.titulo || (otro ? `${otro.nombre}` : null),
+        conversacionTipo: c.tipo,
+        participante: otro,
+        ultimoMensaje,
+      };
+    });
+  },
+
+  async getListchatgrupalesUsuario(usuarioId) {
+    if (!usuarioId) {
+      throw new Error("El ID de usuario es obligatorio");
+    }
+    const conversaciones = await ChatRepository.getListChatGrupal(Number(usuarioId));
+    return conversaciones.map(c => {
+      const participantes = (c.participantes || []).map(p => p.usuario);
+      const ultimoMensaje = (c.mensajes && c.mensajes.length > 0) ? c.mensajes[0] : null;
+      return {
+        conversacionId: c.id,
+        titulo: c.titulo,
+        conversacionTipo: c.tipo,
+        participantes,
+        ultimoMensaje,
+      };
+    });
+  },
+
 
 };

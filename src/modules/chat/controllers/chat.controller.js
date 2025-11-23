@@ -125,3 +125,35 @@ export async function listarParticipantes(req, res) {
     });
   }
 }
+
+//recuperar los chat  de  grupo como  de  privado  para un usuario
+
+export async function getConversacionesUsuario(req, res) {
+  try {
+     const usuarioId = req.params.usuarioId || req.query.usuarioId || (req.body && req.body.usuarioId);
+    const conversaciones = await ChatService.getListchatprivadosUsuario(Number(usuarioId));
+    return res.status(200).json({ success: true, data: conversaciones });
+  } catch (err) {
+    console.error("Error en recuperar conversaciones del usuario:", err);
+    return res.status(err.status || 500).json({
+      success: false,
+      message: err.message || "Error interno del servidor",
+      data: null
+    });
+  }
+}
+
+export async function getConversacionesgrupoUsuario(req, res) {
+  try {
+     const usuarioId = req.params.usuarioId || req.query.usuarioId || (req.body && req.body.usuarioId);
+    const conversaciones = await ChatService.getListchatgrupalesUsuario(Number(usuarioId));
+    return res.status(200).json({ success: true, data: conversaciones });
+  } catch (err) {
+    console.error("Error en recuperar conversaciones grupales del usuario:", err);
+    return res.status(err.status || 500).json({
+      success: false,
+      message: err.message || "Error interno del servidor",
+      data: null
+    });
+  }
+}
