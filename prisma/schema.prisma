@@ -26,6 +26,7 @@ model Usuario {
 
   mensajes        Mensaje[]
   participaciones ConversacionParticipante[]
+  estados        MensajeEstado[]
 }
 
 model Conversacion {
@@ -42,8 +43,8 @@ model Conversacion {
 model Mensaje {
   id            Int      @id @default(autoincrement())
   contenido     String
-  tipo          String   @default("texto") // texto, imagen, audio, etc.
-  visto         Boolean  @default(false)
+  tipo          String   @default("texto") 
+
   creadoEn      DateTime @default(now())
   actualizadoEn DateTime @updatedAt
 
@@ -52,6 +53,8 @@ model Mensaje {
 
   remitenteId Int
   remitente   Usuario @relation(fields: [remitenteId], references: [id])
+
+  estados MensajeEstado[]
 }
 
 model ConversacionParticipante {
@@ -65,5 +68,23 @@ model ConversacionParticipante {
   usuario        Usuario      @relation(fields: [usuarioId], references: [id])
   usuarioId      Int
 
+  activo Boolean @default(true)
+  unidoEn DateTime @default(now())
+
   @@unique([conversacionId, usuarioId])
+}
+
+model MensajeEstado{
+  id Int @id @default(autoincrement())
+  visto Boolean @default(false)
+  recibido Boolean @default(false)
+  actualizadoEn DateTime @updatedAt
+
+  mensaje   Mensaje @relation(fields: [mensajeId], references: [id])
+  mensajeId Int
+
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId Int
+
+   @@unique([mensajeId, usuarioId])  
 }
