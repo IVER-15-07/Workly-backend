@@ -60,13 +60,28 @@ export const ChatService = {
     return ChatRepository.getMensajesPorConversacion(conversacionId);
   },
 
+  async agregarParticipanteAGrupo(conversacionId, usuarioId) {
 
+    const existentes = await ChatRepository.getParticipantes(conversacionId);
+    if (existentes.some(p => p.usuarioId === usuarioId)) {
+      throw new Error("El usuario ya es participante del grupo");
+    }
 
+    return ChatRepository.agregarParticipante(conversacionId, usuarioId);
+  },
 
+  async eliminarParticipanteDeGrupo(conversacionId, usuarioId) {
 
-  //FALTA REVISAR
+    const existentes = await ChatRepository.getParticipantes(conversacionId);
+    if (!existentes.some(p => p.usuarioId === usuarioId)) {
+      throw new Error("El usuario no es participante del grupo");
+    }
 
+    return ChatRepository.eliminarParticipante(conversacionId, usuarioId);
+  },
 
-
+  async listarParticipantes(conversacionId) {
+    return ChatRepository.getParticipantes(conversacionId);
+  },
 
 };
