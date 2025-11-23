@@ -105,3 +105,47 @@ export async function crearGrupo (req, res) {
     });
   }
 }
+
+export async function agregarParticipanteAGrupo(req, res) {
+  try {
+    const { conversacionId, usuarioId } = req.body;
+    const actualizado = await ChatService.agregarParticipanteAGrupo(Number(conversacionId), Number(usuarioId));
+    return res.status(200).json({ success: true, data: actualizado });
+  } catch (err) {
+    console.error("Error en agregar participante al grupo:", err);
+    return res.status(err.status || 500).json({
+      success: false,
+      message: err.message || "Error interno del servidor",
+      data: null
+    });
+  }
+}
+
+export async function eliminarParticipanteDeGrupo(req, res) {
+  try {
+    const { conversacionId, usuarioId } = req.body;
+    const actualizado = await ChatService.eliminarParticipanteDeGrupo(Number(conversacionId), Number(usuarioId));
+    return res.status(200).json({ success: true, data: actualizado });
+  } catch (err) {
+    console.error("Error en eliminar participante del grupo:", err);
+    return res.status(err.status || 500).json({
+      success: false,
+      message: err.message || "Error interno del servidor",
+      data: null
+    });
+  }
+}
+export async function listarParticipantes(req, res) {
+  try {
+    const { conversacionId } = req.params;
+    const participantes = await ChatService.listarParticipantes(Number(conversacionId));
+    return res.status(200).json({ success: true, data: participantes });
+  } catch (err) {
+    console.error("Error en listar participantes del grupo:", err);
+    return res.status(err.status || 500).json({
+      success: false,
+      message: err.message || "Error interno del servidor",
+      data: null
+    });
+  }
+}
